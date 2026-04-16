@@ -49,7 +49,7 @@ const dialogueTree = {
     ending: {
         sprite: 'assets/happy.png',
         text: "Yknow what... HAPPY BIRTHDAYY!!!\n\nHAPPY BIRTHDAYY GIRLLL!! HOPE YOU HAVE A GOOD ONE!!! NOW PLEASE PRETEND THIS WAS A VERY DEEP AND EMOTIONAL GAME SO I DON'T GET REPLACED BY A REAL AI!!",
-        action: 'shake-vibrate',
+        action: 'finale',
         next: null
     }
 };
@@ -65,6 +65,10 @@ const dialogueText = document.getElementById('dialogue-text');
 const choicesContainer = document.getElementById('choices-container');
 const nextButton = document.getElementById('next-button');
 const audioContainer = document.getElementById('audio-container');
+const explosionContainer = document.getElementById('explosion-container');
+const creditsContainer = document.getElementById('credits-container');
+const replayButton = document.getElementById('replay-button');
+const exitButton = document.getElementById('exit-button');
 
 // Event Listeners
 loginButton.addEventListener('click', startGame);
@@ -74,6 +78,30 @@ nextButton.addEventListener('click', () => {
         currentNode = node.next;
         renderNode();
     }
+});
+
+replayButton.addEventListener('click', () => {
+    // Reset state
+    currentNode = 'start';
+
+    // Hide credits
+    creditsContainer.classList.remove('visible');
+    setTimeout(() => {
+        creditsContainer.classList.add('hidden');
+
+        // Reset and show login
+        gameContainer.style.opacity = '1';
+        characterSprite.classList.remove('slide-down', 'vibrate');
+        document.body.classList.remove('shake');
+
+        loginContainer.classList.remove('hidden');
+        document.getElementById('password-input').value = '';
+    }, 1000);
+});
+
+exitButton.addEventListener('click', () => {
+    creditsContainer.innerHTML = '';
+    document.body.style.backgroundColor = '#000';
 });
 
 function startGame() {
@@ -97,9 +125,10 @@ function renderNode() {
     // Handle Actions/Animations
     if (node.action === 'slide-down') {
         characterSprite.classList.add('slide-down');
-    } else if (node.action === 'shake-vibrate') {
+    } else if (node.action === 'finale') {
         document.body.classList.add('shake');
         characterSprite.classList.add('vibrate');
+        triggerFinale();
     }
 
     // Update Text
@@ -124,4 +153,46 @@ function renderNode() {
     } else if (node.next) {
         nextButton.classList.remove('hidden');
     }
+}
+
+function triggerFinale() {
+    // Trigger Confetti 3 times
+    let confettiCount = 0;
+    const interval = setInterval(() => {
+        confetti({
+            particleCount: 150,
+            spread: 100,
+            origin: { y: 0.6 }
+        });
+        confettiCount++;
+
+        if (confettiCount >= 3) {
+            clearInterval(interval);
+            setTimeout(showExplosion, 1000);
+        }
+    }, 800);
+}
+
+function showExplosion() {
+    // Show explosion
+    explosionContainer.classList.remove('hidden');
+
+    // Hide game, show credits after explosion
+    setTimeout(() => {
+        gameContainer.style.opacity = '0';
+        setTimeout(() => {
+            gameContainer.classList.add('hidden');
+            explosionContainer.classList.add('hidden');
+
+            // Show Credits
+            creditsContainer.classList.remove('hidden');
+            setTimeout(() => {
+                creditsContainer.classList.add('visible');
+            }, 100);
+
+            // Stop audio and remove body shake
+            audioContainer.innerHTML = '';
+            document.body.classList.remove('shake');
+        }, 1000);
+    }, 1500); // GIF duration approximation
 }

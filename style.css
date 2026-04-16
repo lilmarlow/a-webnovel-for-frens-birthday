@@ -15,7 +15,7 @@ body {
 #login-container {
     width: 100vw;
     height: 100vh;
-    background-image: url('assets/Ubuntu-Login-screen-before-change-1024x539.jpg');
+    background-image: url('assets/dizzy_os_bg.png');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -160,6 +160,103 @@ body {
 
 #next-button:hover {
     color: #fff;
+}
+
+/* Explosion */
+#explosion-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+}
+
+#explosion-container img {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+/* Credits Screen */
+#credits-container {
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+
+#credits-container.visible {
+    opacity: 1;
+}
+
+.credits-content {
+    max-width: 800px;
+    padding: 50px 20px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.credits-content h1 {
+    color: #ffcc00;
+    margin-bottom: 40px;
+    font-size: 2em;
+}
+
+.credits-content h2 {
+    color: #E95420;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    border-bottom: 1px solid #E95420;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.credits-content p {
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
+
+.credits-actions {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.credits-actions button {
+    padding: 10px 30px;
+    font-size: 18px;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #777;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s;
+}
+
+.credits-actions button:hover {
+    background-color: #555;
+}
+
+#game-container {
+    transition: opacity 1s ease-in-out;
 }
 
 /* Animations */
