@@ -1,0 +1,171 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+    color: #fff;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Login Screen */
+#login-container {
+    width: 100vw;
+    height: 100vh;
+    background-image: url('assets/login_screen.png');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+#login-form {
+    position: absolute;
+    bottom: 20%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+#password-input {
+    padding: 10px;
+    font-size: 20px;
+    background: transparent;
+    border: 2px solid #ffcc00;
+    color: #ffcc00;
+    text-align: center;
+    outline: none;
+    letter-spacing: 5px;
+}
+
+#login-button {
+    padding: 10px 30px;
+    font-size: 24px;
+    background-color: #ffcc00;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.2s;
+}
+
+#login-button:hover {
+    background-color: #ffe680;
+}
+
+/* Game Screen */
+#game-container {
+    width: 100vw;
+    height: 100vh;
+    background-image: url('assets/bg.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Character Sprite */
+#character-sprite {
+    position: absolute;
+    bottom: 30%;
+    max-height: 60vh;
+    transition: transform 0.3s ease-in-out;
+}
+
+.slide-down {
+    transform: translateY(100px);
+}
+
+.shake {
+    animation: shake-animation 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.vibrate {
+    animation: vibrate-animation 0.1s linear infinite both;
+}
+
+/* Dialogue Box */
+#dialogue-box {
+    width: 80%;
+    max-width: 1000px;
+    min-height: 150px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 3px solid #555;
+    border-radius: 10px;
+    margin-bottom: 5%;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 10;
+}
+
+#dialogue-text {
+    font-size: 22px;
+    line-height: 1.5;
+    margin: 0 0 20px 0;
+}
+
+#choices-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.choice-button {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #777;
+    padding: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s;
+    font-family: inherit;
+}
+
+.choice-button:hover {
+    background-color: #555;
+}
+
+#next-button {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 20px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+#next-button:hover {
+    color: #fff;
+}
+
+/* Animations */
+@keyframes shake-animation {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+@keyframes vibrate-animation {
+    0% { transform: translate(0) }
+    20% { transform: translate(-2px, 2px) }
+    40% { transform: translate(-2px, -2px) }
+    60% { transform: translate(2px, 2px) }
+    80% { transform: translate(2px, -2px) }
+    100% { transform: translate(0) }
+}

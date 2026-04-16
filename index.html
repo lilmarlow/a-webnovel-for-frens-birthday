@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Birthday Glitch</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-container">
+        <div id="login-form">
+            <input type="password" id="password-input" placeholder="PASSWORD">
+            <button id="login-button">LOGIN</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-container" class="hidden">
+        <!-- Hidden Audio -->
+        <div id="audio-container"></div>
+
+        <!-- Character Sprite -->
+        <img id="character-sprite" src="assets/idle.png" alt="Character Sprite">
+
+        <!-- Dialogue UI -->
+        <div id="dialogue-box">
+            <p id="dialogue-text"></p>
+            <div id="choices-container"></div>
+            <button id="next-button" class="hidden">Next</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
