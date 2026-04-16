@@ -55,24 +55,79 @@ const dialogueTree = {
 };
 
 let currentNode = 'start';
+let isTyping = false;
+let typeInterval;
+
+// Audio Context
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+
+function playBlip() {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+
+    gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
+}
+
+function playPop() {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.1);
+
+    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.1);
+}
 
 // DOM Elements
 const loginContainer = document.getElementById('login-container');
 const loginButton = document.getElementById('login-button');
+const loadingContainer = document.getElementById('loading-container');
 const gameContainer = document.getElementById('game-container');
 const characterSprite = document.getElementById('character-sprite');
 const dialogueText = document.getElementById('dialogue-text');
 const choicesContainer = document.getElementById('choices-container');
 const nextButton = document.getElementById('next-button');
 const audioContainer = document.getElementById('audio-container');
-const explosionContainer = document.getElementById('explosion-container');
 const creditsContainer = document.getElementById('credits-container');
 const replayButton = document.getElementById('replay-button');
 const exitButton = document.getElementById('exit-button');
 
 // Event Listeners
-loginButton.addEventListener('click', startGame);
+loginButton.addEventListener('click', () => {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    startGame();
+});
 nextButton.addEventListener('click', () => {
+    if (isTyping) {
+        // Skip typing
+        clearInterval(typeInterval);
+        isTyping = false;
+        dialogueText.innerText = dialogueTree[currentNode].text;
+        showChoicesOrNext();
+        return;
+    }
     const node = dialogueTree[currentNode];
     if (node && node.next) {
         currentNode = node.next;
@@ -105,14 +160,20 @@ exitButton.addEventListener('click', () => {
 });
 
 function startGame() {
-    // Hide login, show game
+    // Hide login, show loading
     loginContainer.classList.add('hidden');
-    gameContainer.classList.remove('hidden');
+    loadingContainer.classList.remove('hidden');
 
-    // Play hidden YouTube audio (autoplay requires interaction)
-    audioContainer.innerHTML = '<iframe width="0" height="0" src="https://www.youtube.com/embed/Tp-QXW1cvlk?autoplay=1&loop=1&playlist=Tp-QXW1cvlk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+    setTimeout(() => {
+        // Hide loading, show game
+        loadingContainer.classList.add('hidden');
+        gameContainer.classList.remove('hidden');
 
-    renderNode();
+        // Play hidden YouTube audio (autoplay requires interaction)
+        audioContainer.innerHTML = '<iframe width="0" height="0" src="https://www.youtube.com/embed/Tp-QXW1cvlk?autoplay=1&loop=1&playlist=Tp-QXW1cvlk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+
+        renderNode();
+    }, 2000);
 }
 
 function renderNode() {
@@ -131,24 +192,47 @@ function renderNode() {
         triggerFinale();
     }
 
-    // Update Text
-    dialogueText.innerText = node.text;
-
     // Clear choices & next button
     choicesContainer.innerHTML = '';
     nextButton.classList.add('hidden');
+    dialogueText.innerText = '';
 
-    // Render Choices or Next button
+    // Typewriter effect
+    isTyping = true;
+    let charIndex = 0;
+    const textToType = node.text;
+
+    clearInterval(typeInterval);
+    typeInterval = setInterval(() => {
+        if (charIndex < textToType.length) {
+            dialogueText.innerText += textToType.charAt(charIndex);
+            charIndex++;
+            if (charIndex % 3 === 0) playBlip(); // Play blip every few chars
+        } else {
+            clearInterval(typeInterval);
+            isTyping = false;
+            showChoicesOrNext();
+        }
+    }, 30);
+}
+
+function showChoicesOrNext() {
+    const node = dialogueTree[currentNode];
+    if (!node) return;
+
     if (node.choices) {
-        node.choices.forEach(choice => {
-            const btn = document.createElement('button');
-            btn.className = 'choice-button';
-            btn.innerText = choice.text;
-            btn.onclick = () => {
-                currentNode = choice.next;
-                renderNode();
-            };
-            choicesContainer.appendChild(btn);
+        node.choices.forEach((choice, index) => {
+            setTimeout(() => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-button pop-in';
+                btn.innerText = choice.text;
+                btn.onclick = () => {
+                    currentNode = choice.next;
+                    renderNode();
+                };
+                choicesContainer.appendChild(btn);
+                playPop();
+            }, index * 200); // Staggered pop-in
         });
     } else if (node.next) {
         nextButton.classList.remove('hidden');
@@ -168,31 +252,25 @@ function triggerFinale() {
 
         if (confettiCount >= 3) {
             clearInterval(interval);
-            setTimeout(showExplosion, 1000);
+            setTimeout(showCredits, 1000);
         }
     }, 800);
 }
 
-function showExplosion() {
-    // Show explosion
-    explosionContainer.classList.remove('hidden');
-
-    // Hide game, show credits after explosion
+function showCredits() {
+    // Hide game, show credits
+    gameContainer.style.opacity = '0';
     setTimeout(() => {
-        gameContainer.style.opacity = '0';
+        gameContainer.classList.add('hidden');
+
+        // Show Credits
+        creditsContainer.classList.remove('hidden');
         setTimeout(() => {
-            gameContainer.classList.add('hidden');
-            explosionContainer.classList.add('hidden');
+            creditsContainer.classList.add('visible');
+        }, 100);
 
-            // Show Credits
-            creditsContainer.classList.remove('hidden');
-            setTimeout(() => {
-                creditsContainer.classList.add('visible');
-            }, 100);
-
-            // Stop audio and remove body shake
-            audioContainer.innerHTML = '';
-            document.body.classList.remove('shake');
-        }, 1000);
-    }, 1500); // GIF duration approximation
+        // Stop audio and remove body shake
+        audioContainer.innerHTML = '';
+        document.body.classList.remove('shake');
+    }, 1000);
 }
