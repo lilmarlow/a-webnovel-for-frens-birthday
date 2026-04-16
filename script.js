@@ -14,7 +14,7 @@ const dialogueTree = {
   },
   branchB: {
     sprite: "assets/idle.png",
-    text: "Hey! Don't blame me for the resolution! My dev is currently suffering from a massive Art Block. He literally stared at a white canvas for three hours before drawing me and calling it 'stylized.' He's a silly weirdo who develops 10 games just to archive them all!",
+    text: "Hey! Don't blame me for the resolution! My dev is currently suffering from a massive ArtBlock!. He literally stared at a white canvas for three hours before drawing me and calling it 'stylized.' He's a silly weirdo who develops 10 games just to archive them all! what a loser!",
     next: "secondQuestion",
   },
   secondQuestion: {
@@ -32,23 +32,23 @@ const dialogueTree = {
   },
   branchD: {
     sprite: "assets/idle.png",
-    text: "Loot? You want loot? I’m a line of code living in a folder named 'Final_FINAL_version_2'. If I was actually smart, I’d have coded myself some better shoes or at least a background that isn't just... gestures at the void... this!",
+    text: "Loot? You want loot? I’m a line of code living in a folder named 'Final_FINAL_version_2'. If I was actually smart, I’d have coded myself some better shoes or at least a background that isn't just... gestures at the void... this! agh!",
     next: "discovery",
   },
   discovery: {
     sprite: "assets/shocked.png",
-    text: "Wait... you were told to log in today? Let me check the system calendar... !!",
+    text: "Wait... you were told to log in today? No no wait Let me check the system calendar... !!",
     next: "transition",
   },
   transition: {
     sprite: "assets/shocked.png",
-    text: "Oh. Oh no. OH NO. The creator is gonna delete my source code. I had ONE job to do today! Forget the dialogue tree! We're skipping straight to the secret ending!",
+    text: "Oh. Oh no. OH NO. The creator is gonna delete my source code!! I had ONE job to do today,nono! YESTERDAY! Forget the dialogue tree! We're skipping straight to the secret ending! OKK!!",
     action: "slide-down",
     next: "ending",
   },
   ending: {
     sprite: "assets/happy.png",
-    text: "Yknow what... HAPPY BIRTHDAYY!!!\n\nHAPPY BIRTHDAYY GIRLLL!! HOPE YOU HAVE A GOOD ONE!!! NOW PLEASE PRETEND THIS WAS A VERY DEEP AND EMOTIONAL GAME SO I DON'T GET REPLACED BY A REAL AI!!",
+    text: "Yknow what... HAPPY BIRTHDAYY!!!\n\nHAPPY (LATE) BIRTHDAYY GIRLLL!! HOPE YOU HAVE A GOOD ONE!!! NOW PLEASE PRETEND THIS WAS A VERY DEEP AND EMOTIONAL GAME SO I DON'T GET REPLACED BY A REAL AI!!",
     action: "finale",
     next: null,
   },
